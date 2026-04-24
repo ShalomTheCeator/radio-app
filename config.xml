@@ -8,7 +8,7 @@
     <description>Worldwide Radio Stations</description>
     <author email="radio@global.com">Global Radio</author>
     
-    <!-- App Preferences -->
+    <!-- App Preferences - REMOVED icon/splash references -->
     <preference name="permissions" value="none" />
     <preference name="orientation" value="portrait" />
     <preference name="android-minSdkVersion" value="22" />
@@ -16,9 +16,8 @@
     <preference name="BackgroundMode" value="true" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <preference name="SplashScreenDelay" value="2000" />
-    <preference name="AutoHideSplashScreen" value="true" />
     
-    <!-- Plugins -->
+    <!-- Required Plugins -->
     <plugin name="cordova-plugin-streaming-media" />
     <plugin name="cordova-plugin-background-mode" />
     <plugin name="cordova-plugin-media" />
@@ -31,10 +30,7 @@
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="icy://*/*" />
-    <allow-navigation href="*" />
     
-    <!-- Icons -->
-    <icon src="www/res/icon.png" />
-    <splash src="www/res/splash.png" />
+    <!-- NO ICON OR SPLASH REFERENCES - Cordova will use defaults -->
     
 </widget>
