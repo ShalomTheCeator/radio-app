@@ -27,25 +27,16 @@ jobs:
       
       - name: Build App
         run: |
-          # Create project
-          cordova create MyApp com.myapp.test "MyApp"
-          
-          # Copy your files
-          cp -r www/* MyApp/www/
-          cp config.xml MyApp/
-          
-          # Build
-          cd MyApp
+          cordova create app com.radio.global "GlobalRadio"
+          cp -r www/* app/www/
+          cp config.xml app/
+          cd app
           cordova platform add android
           cordova build android
-          
-          # Verify APK exists
-          echo "=== CHECKING FOR APK ==="
-          ls -la platforms/android/app/build/outputs/apk/debug/
-          
+          cd ..
+      
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: my-app
-          # CORRECT PATH - NOTICE "outputs" not "output/tmp"
-          path: MyApp/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          name: global-radio-apk
+          path: app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
