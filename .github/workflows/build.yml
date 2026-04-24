@@ -1,4 +1,4 @@
-name: Build Radio App APK
+name: Build Radio App
 
 on:
   workflow_dispatch:
@@ -25,20 +25,40 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova
 
-      - name: Build Radio App (Debug)
+      - name: Build Cordova App
         run: |
-          cordova create radioApp com.radio.global "GlobalRadio"
-          cp -r www/* radioApp/www/
-          cp config.xml radioApp/
-          cd radioApp
+          # Create new Cordova project
+          cordova create myapp com.radio.global "GlobalRadio"
+          
+          # Copy your files
+          cp -r www/* myapp/www/
+          cp config.xml myapp/
+          
+          # Enter project
+          cd myapp
+          
+          # Add Android platform
           cordova platform add android
+          
+          # Add plugins
           cordova plugin add cordova-plugin-streaming-media
           cordova plugin add cordova-plugin-background-mode
+          
+          # Build the APK
           cordova build android
+          
+          # Go back
           cd ..
+          
+          # Find the APK and copy it to root
+          echo "Searching for APK..."
+          find myapp -name "*.apk" -exec cp {} ./app.apk \; 2>/dev/null || echo "APK not found yet"
+          
+          # List files to verify
+          ls -la *.apk 2>/dev/null || echo "No APK in root"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: global-radio-app
-          path: radioApp/platforms/android/app/build/outputs/apk/debug/*.apk
+          path: app.apk
