@@ -1,4 +1,4 @@
-name: Build Cordova APK
+name: Build Radio App APK
 
 on:
   workflow_dispatch:
@@ -25,31 +25,20 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova
 
-      - name: Build APK
+      - name: Build Radio App (Debug)
         run: |
-          # Create a new Cordova project
           cordova create radioApp com.radio.global "GlobalRadio"
-
-          # Copy your www folder and config.xml into it
           cp -r www/* radioApp/www/
           cp config.xml radioApp/
-
-          # Enter the project directory
           cd radioApp
-
-          # Add Android platform
           cordova platform add android
-
-          # Add required plugins
           cordova plugin add cordova-plugin-streaming-media
           cordova plugin add cordova-plugin-background-mode
-
-          # Build the APK (using release build is often more stable)
-          cordova build android --release
+          cordova build android
+          cd ..
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: global-radio-app
-          # This updated path should now match where the APK is created
-          path: radioApp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+          path: radioApp/platforms/android/app/build/outputs/apk/debug/*.apk
