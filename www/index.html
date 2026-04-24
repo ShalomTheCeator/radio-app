@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Global Radio - Worldwide Stations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Splash Screen -->
+        <div id="splashScreen" class="splash-screen">
+            <div class="splash-content">
+                <i class="fas fa-satellite-dish"></i>
+                <h1>Global Radio</h1>
+                <div class="spinner"></div>
+            </div>
+        </div>
+        
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-satellite-dish"></i>
+                <span>Global Radio</span>
+            </div>
+            <div class="header-buttons">
+                <button class="icon-btn" id="searchToggle"><i class="fas fa-search"></i></button>
+                <button class="icon-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+            </div>
+        </div>
+        
+        <!-- Search Bar -->
+        <div id="searchBar" class="search-bar hidden">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search stations, countries, genres...">
+                <button id="voiceSearchBtn"><i class="fas fa-microphone"></i></button>
+            </div>
+            <div class="filter-chips">
+                <button class="chip active" data-filter="all">All</button>
+                <button class="chip" data-filter="top">Top 50</button>
+                <button class="chip" data-filter="country">By Country</button>
+                <button class="chip" data-filter="genre">By Genre</button>
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="main-content" id="mainContent">
+            
+            <!-- Player View -->
+            <div id="playerView" class="view active">
+                <div class="player-artwork">
+                    <div class="visualizer-container">
+                        <canvas id="visualizer" class="visualizer"></canvas>
+                    </div>
+                </div>
+                <div class="player-info">
+                    <h2 id="currentStationName">Select a Station</h2>
+                    <p id="currentStationGenre">-</p>
+                    <div class="now-playing" id="nowPlaying">
+                        <span id="currentSong">Not playing</span>
+                        <span id="currentArtist">-</span>
+                    </div>
+                </div>
+                <div class="stream-details">
+                    <span id="bitrate">- kbps</span>
+                    <span id="listeners">👥 0</span>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-section">
+                    <span id="currentTime">00:00</span>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span id="duration">00:00</span>
+                </div>
+                
+                <!-- Controls -->
+                <div class="controls">
+                    <button id="skipBackBtn" class="ctrl-btn"><i class="fas fa-backward-step"></i></button>
+                    <button id="playPauseBtn" class="play-btn"><i class="fas fa-play"></i></button>
+                    <button id="skipFwdBtn" class="ctrl-btn"><i class="fas fa-forward-step"></i></button>
+                </div>
+                
+                <!-- Secondary Controls -->
+                <div class="secondary-controls">
+                    <button id="favBtn" class="sec-btn"><i class="fas fa-heart"></i> Favorite</button>
+                    <button id="shareBtn" class="sec-btn"><i class="fas fa-share"></i> Share</button>
+                    <button id="sleepTimerBtn" class="sec-btn"><i class="fas fa-bed"></i> Sleep</button>
+                    <button id="equalizerBtn" class="sec-btn"><i class="fas fa-sliders-h"></i> EQ</button>
+                    <button id="recordBtn" class="sec-btn"><i class="fas fa-circle-dot"></i> Record</button>
+                </div>
+                
+                <!-- Volume Control -->
+                <div class="volume-control">
+                    <i class="fas fa-volume-down"></i>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="70">
+                    <i class="fas fa-volume-up"></i>
+                    <button id="muteBtn" class="mute-btn"><i class="fas fa-volume-up"></i></button>
+                </div>
+                
+                <div id="sleepTimerDisplay" class="sleep-timer"></div>
+            </div>
+            
+            <!-- Stations View -->
+            <div id="stationsView" class="view">
+                <div class="section">
+                    <h3><i class="fas fa-chart-line"></i> Top Stations</h3>
+                    <div class="stations-list" id="topStationsList"></div>
+                </div>
+                <div class="section">
+                    <h3><i class="fas fa-heart"></i> Favorites</h3>
+                    <div class="stations-list" id="favoritesList"></div>
+                </div>
+                <div class="section">
+                    <h3><i class="fas fa-clock"></i> Recent</h3>
+                    <div class="stations-list" id="recentList"></div>
+                </div>
+                <div class="section">
+                    <h3><i class="fas fa-star"></i> Recommended</h3>
+                    <div class="stations-list" id="recommendedList"></div>
+                </div>
+            </div>
+            
+            <!-- Search Results View -->
+            <div id="searchView" class="view hidden">
+                <div class="section">
+                    <h3 id="searchTitle">Search Results</h3>
+                    <div class="stations-list" id="searchResultsList"></div>
+                </div>
+            </div>
+            
+            <!-- Category View -->
+            <div id="categoryView" class="view hidden">
+                <div class="section">
+                    <h3 id="categoryTitle">Stations</h3>
+                    <div class="stations-list" id="categoryResultsList"></div>
+                </div>
+            </div>
+            
+            <!-- Equalizer View -->
+            <div id="equalizerView" class="view hidden">
+                <div class="eq-container">
+                    <h3>Equalizer</h3>
+                    <div class="presets">
+                        <button class="eq-preset active" data-preset="normal">Normal</button>
+                        <button class="eq-preset" data-preset="rock">Rock</button>
+                        <button class="eq-preset" data-preset="pop">Pop</button>
+                        <button class="eq-preset" data-preset="jazz">Jazz</button>
+                        <button class="eq-preset" data-preset="classical">Classical</button>
+                        <button class="eq-preset" data-preset="bass">Bass</button>
+                    </div>
+                    <div class="eq-sliders">
+                        <div class="eq-band"><span>32Hz</span><input type="range" class="eq-slider" data-freq="32" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>64Hz</span><input type="range" class="eq-slider" data-freq="64" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>125Hz</span><input type="range" class="eq-slider" data-freq="125" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>250Hz</span><input type="range" class="eq-slider" data-freq="250" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>500Hz</span><input type="range" class="eq-slider" data-freq="500" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>1kHz</span><input type="range" class="eq-slider" data-freq="1000" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>2kHz</span><input type="range" class="eq-slider" data-freq="2000" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>4kHz</span><input type="range" class="eq-slider" data-freq="4000" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>8kHz</span><input type="range" class="eq-slider" data-freq="8000" min="-12" max="12" value="0"></div>
+                        <div class="eq-band"><span>16kHz</span><input type="range" class="eq-slider" data-freq="16000" min="-12" max="12" value="0"></div>
+                    </div>
+                    <button id="resetEqBtn" class="reset-btn">Reset to Default</button>
+                </div>
+            </div>
+            
+            <!-- Sleep Timer View -->
+            <div id="sleepTimerView" class="view hidden">
+                <div class="timer-container">
+                    <h3>Sleep Timer</h3>
+                    <div class="timer-options">
+                        <button class="timer-option" data-minutes="15">15 min</button>
+                        <button class="timer-option" data-minutes="30">30 min</button>
+                        <button class="timer-option" data-minutes="45">45 min</button>
+                        <button class="timer-option" data-minutes="60">1 hour</button>
+                        <button class="timer-option" data-minutes="90">1.5 hours</button>
+                        <button class="timer-option" data-minutes="120">2 hours</button>
+                    </div>
+                    <button id="cancelTimerBtn" class="cancel-btn">Cancel Timer</button>
+                    <div id="timerStatus" class="timer-status"></div>
+                </div>
+            </div>
+            
+            <!-- Alarm View -->
+            <div id="alarmView" class="view hidden">
+                <div class="alarm-container">
+                    <h3>Alarm Clock</h3>
+                    <input type="time" id="alarmTime" value="07:00">
+                    <select id="alarmStation">
+                        <option value="">Play last station</option>
+                    </select>
+                    <button id="setAlarmBtn" class="set-btn">Set Alarm</button>
+                    <button id="cancelAlarmBtn" class="cancel-btn">Cancel Alarm</button>
+                    <div id="alarmStatus" class="alarm-status"></div>
+                </div>
+            </div>
+            
+            <!-- Recording View -->
+            <div id="recordingView" class="view hidden">
+                <div class="recording-container">
+                    <h3>Record Stream</h3>
+                    <div id="recordingStatus" class="recording-status">Ready to record</div>
+                    <button id="startRecordingBtn" class="record-btn"><i class="fas fa-circle"></i> Start Recording</button>
+                    <button id="stopRecordingBtn" class="stop-btn" disabled><i class="fas fa-square"></i> Stop Recording</button>
+                    <div class="recordings-list" id="recordingsList"></div>
+                </div>
+            </div>
+            
+            <!-- Settings View -->
+            <div id="settingsView" class="view hidden">
+                <div class="settings-container">
+                    <h3>Settings</h3>
+                    <div class="setting-item">
+                        <span><i class="fas fa-mobile-alt"></i> Background Playback</span>
+                        <label class="switch">
+                            <input type="checkbox" id="bgPlaybackToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span><i class="fas fa-chart-line"></i> Data Saver Mode</span>
+                        <label class="switch">
+                            <input type="checkbox" id="dataSaverToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span><i class="fas fa-bell"></i> Notifications</span>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span><i class="fas fa-moon"></i> Dark Mode</span>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span><i class="fas fa-tachometer-alt"></i> Default Bitrate</span>
+                        <select id="defaultBitrate">
+                            <option value="64">64 kbps (Low)</option>
+                            <option value="128" selected>128 kbps (Medium)</option>
+                            <option value="192">192 kbps (High)</option>
+                            <option value="320">320 kbps (Very High)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <span><i class="fas fa-database"></i> Cache Size</span>
+                        <span id="cacheSize">0 MB</span>
+                        <button id="clearCacheBtn" class="small-btn">Clear</button>
+                    </div>
+                    <button id="exportDataBtn" class="settings-btn"><i class="fas fa-download"></i> Export My Data</button>
+                    <button id="resetAppBtn" class="settings-btn danger"><i class="fas fa-trash"></i> Reset All Settings</button>
+                </div>
+            </div>
+            
+            <!-- Stats View -->
+            <div id="statsView" class="view hidden">
+                <div class="stats-container">
+                    <h3>Your Listening Stats</h3>
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <i class="fas fa-clock"></i>
+                            <div class="stat-value" id="totalListeningTime">0</div>
+                            <div class="stat-label">Minutes Listened</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-microphone-alt"></i>
+                            <div class="stat-value" id="uniqueStations">0</div>
+                            <div class="stat-label">Unique Stations</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-heart"></i>
+                            <div class="stat-value" id="totalFavorites">0</div>
+                            <div class="stat-label">Favorites</div>
+                        </div>
+                    </div>
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <i class="fas fa-chart-line"></i>
+                            <div class="stat-value" id="topGenre">-</div>
+                            <div class="stat-label">Top Genre</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-day"></i>
+                            <div class="stat-value" id="peakHour">-</div>
+                            <div class="stat-label">Peak Listening Hour</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-trophy"></i>
+                            <div class="stat-value" id="streakDays">0</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                    </div>
+                    <canvas id="listeningChart" width="300" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-btn active" data-view="player"><i class="fas fa-play-circle"></i><span>Player</span></button>
+            <button class="nav-btn" data-view="stations"><i class="fas fa-list"></i><span>Stations</span></button>
+            <button class="nav-btn" data-view="equalizer"><i class="fas fa-sliders-h"></i><span>EQ</span></button>
+            <button class="nav-btn" data-view="stats"><i class="fas fa-chart-line"></i><span>Stats</span></button>
+            <button class="nav-btn" data-view="settings"><i class="fas fa-cog"></i><span>Settings</span></button>
+        </div>
+        
+        <!-- Toast Container -->
+        <div id="toastContainer" class="toast-container"></div>
+        
+        <!-- Recording Dialog -->
+        <div id="recordingDialog" class="modal hidden">
+            <div class="modal-content">
+                <h3>Recording</h3>
+                <div id="recordingTimer">00:00</div>
+                <button id="stopRecordingModalBtn" class="danger-btn">Stop Recording</button>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script src="cordova.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
