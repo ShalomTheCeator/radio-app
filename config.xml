@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" 
-        xmlns:cdv="http://cordova.apache.org/ns/1.0" 
-        id="com.myapp.test" 
+        id="com.radio.global" 
         version="1.0.0">
     
-    <name>MyApp</name>
-    <description>Simple App</description>
-    <author email="test@test.com">Test</author>
+    <name>GlobalRadio</name>
     
     <preference name="android-minSdkVersion" value="22" />
     <preference name="android-targetSdkVersion" value="33" />
