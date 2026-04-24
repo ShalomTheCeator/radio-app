@@ -1,4 +1,4 @@
-name: Build Radio App APK
+name: Build Cordova APK
 
 on:
   workflow_dispatch:
@@ -6,41 +6,50 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      
+
       - name: Install Cordova
         run: npm install -g cordova
-      
-      - name: Build Radio App
+
+      - name: Build APK
         run: |
-          cordova create app com.radio.global "GlobalRadio"
-          cp -r www/* app/www/
-          cp config.xml app/
-          cd app
+          # Create a new Cordova project
+          cordova create radioApp com.radio.global "GlobalRadio"
+
+          # Copy your www folder and config.xml into it
+          cp -r www/* radioApp/www/
+          cp config.xml radioApp/
+
+          # Enter the project directory
+          cd radioApp
+
+          # Add Android platform
           cordova platform add android
+
+          # Add required plugins
           cordova plugin add cordova-plugin-streaming-media
           cordova plugin add cordova-plugin-background-mode
-          cordova plugin add cordova-plugin-media
-          cordova plugin add cordova-plugin-network-information
-          cordova plugin add cordova-plugin-vibration
-          cordova build android
-      
+
+          # Build the APK (using release build is often more stable)
+          cordova build android --release
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: global-radio-app
-          path: app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          # This updated path should now match where the APK is created
+          path: radioApp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
