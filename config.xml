@@ -1,36 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" 
-        xmlns:gap="http://phonegap.com/ns/1.0" 
-        id="com.radio.global" 
+        xmlns:cdv="http://cordova.apache.org/ns/1.0" 
+        id="com.myapp.test" 
         version="1.0.0">
     
-    <name>Global Radio</name>
-    <description>Worldwide Radio Stations</description>
-    <author email="radio@global.com">Global Radio</author>
+    <name>MyApp</name>
+    <description>Simple App</description>
+    <author email="test@test.com">Test</author>
     
-    <!-- App Preferences - REMOVED icon/splash references -->
-    <preference name="permissions" value="none" />
-    <preference name="orientation" value="portrait" />
     <preference name="android-minSdkVersion" value="22" />
     <preference name="android-targetSdkVersion" value="33" />
-    <preference name="BackgroundMode" value="true" />
-    <preference name="AllowInlineMediaPlayback" value="true" />
-    <preference name="SplashScreenDelay" value="2000" />
     
-    <!-- Required Plugins -->
-    <plugin name="cordova-plugin-streaming-media" />
-    <plugin name="cordova-plugin-background-mode" />
-    <plugin name="cordova-plugin-media" />
-    <plugin name="cordova-plugin-network-information" />
-    <plugin name="cordova-plugin-vibration" />
-    <plugin name="cordova-plugin-dialogs" />
-    
-    <!-- Internet Access -->
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <allow-intent href="icy://*/*" />
-    
-    <!-- NO ICON OR SPLASH REFERENCES - Cordova will use defaults -->
     
 </widget>
