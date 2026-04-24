@@ -39,15 +39,13 @@ jobs:
           cordova platform add android
           cordova build android
           
-          # List files to debug
-          echo "=== Checking for APK ==="
-          ls -la platforms/android/app/build/outputs/apk/debug/ || echo "No debug folder"
-          ls -la platforms/android/app/build/outputs/apk/release/ || echo "No release folder"
-          find . -name "*.apk" || echo "No APK found"
-      
+          # Verify APK exists
+          echo "=== CHECKING FOR APK ==="
+          ls -la platforms/android/app/build/outputs/apk/debug/
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: my-app
+          # CORRECT PATH - NOTICE "outputs" not "output/tmp"
           path: MyApp/platforms/android/app/build/outputs/apk/debug/app-debug.apk
-        continue-on-error: true
